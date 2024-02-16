@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "gsdc"
+version = "0.1.0"
+description = "General Simulation Data Constructor"
+authors = ["Ivan Mikhailov <mikhailov.ivan.imc@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+gsd = "^3.2.1"
+sympy = "^1.12"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.2.0"
+isort = "^5.13.2"
+mypy = "^1.8.0"
+pytest = "^8.0.0"
+ruff = "^0.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
