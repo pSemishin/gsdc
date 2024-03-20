@@ -1,9 +1,9 @@
 from typing import Final
 
 import pytest
+
+from gsdc import Box, MolGraph
 from gsdc.bondset import LINEAR
-from gsdc import MolGraph
-from gsdc import Box
 
 box = Box(2.0, 2.0, 2.0)
 graph = MolGraph(bonds=LINEAR, sort=True)

@@ -1,7 +1,6 @@
-from gsdc import bondset
 import pytest
-from gsdc import CheckGraph
-from gsdc import NegativeValueError
+
+from gsdc import CheckGraph, NegativeValueError, bondset
 
 
 class TestCheckGraph:

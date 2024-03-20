@@ -1,8 +1,8 @@
 from typing import Final
 
 import pytest
-from gsdc import OutBoxError
-from gsdc import Box
+
+from gsdc import Box, OutBoxError
 
 EPS: Final[float] = 1e-8
 

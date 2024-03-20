@@ -1,8 +1,7 @@
-from typing import List
-
 import pytest
 
 from gsdc import check_script
+
 
 @pytest.mark.parametrize(
     "script_with_error",
@@ -27,8 +26,8 @@ from gsdc import check_script
 )
 def test_check_script_false(script_with_error: str) -> None:
     assert check_script(script_with_error) != "No errors"
-    
-    
+
+
 @pytest.mark.parametrize(
     "script_without_error",
     [

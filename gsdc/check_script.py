@@ -20,9 +20,9 @@ def check_script(script: str) -> str:
     for i in range(len(script) - 1):
         if script[i] == "]" and script[:i].count("[") < 1:
             return f"{script}: before ] less than 1 ["
-        if script[i] == "]" and script[script[:i].rfind("[") : i].count(
-            "("
-        ) != script[script[:i].rfind("[") : i].count(")"):
+        if script[i] == "]" and script[script[:i].rfind("[") : i].count("(") != script[
+            script[:i].rfind("[") : i
+        ].count(")"):
             return f"{script}: in [] number ( > number )"
         if script[i] == ")":
             for j in range(i + 1, len(script)):

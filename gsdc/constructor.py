@@ -4,16 +4,10 @@ import numpy as np
 
 from .bondset import Bondtype
 from .check_graph import CheckGraph
-from .exceptions import (
-    EmptyGraphError,
-    FixedDictError,
-    FixedOutBoxError,
-    FixedRootError,
-    GapsMolGraphError,
-    IterationLimitError,
-    MolGraphConnectionError,
-    MolGraphSimplicityError,
-)
+from .exceptions import (EmptyGraphError, FixedDictError, FixedOutBoxError,
+                         FixedRootError, GapsMolGraphError,
+                         IterationLimitError, MolGraphConnectionError,
+                         MolGraphSimplicityError)
 from .periodic_box import Box
 
 BOND_LENGTH: Final[float] = (1.0 / 3.0) ** (1.0 / 3.0)
