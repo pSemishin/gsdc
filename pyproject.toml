@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gsdc"
-version = "0.1.0"
+version = "1.0.0"
 description = "General Simulation Data Constructor"
 authors = ["Ivan Mikhailov <mikhailov.ivan.imc@gmail.com>"]
 readme = "README.md"
