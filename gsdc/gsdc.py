@@ -1,5 +1,7 @@
 from typing import List
 
+import gsd
+import gsd.hoomd
 import numpy as np
 
 from .molecule import Mol
@@ -24,3 +26,42 @@ class Pot:
         self.types += molecule.types
         self.bonds += [(b[0] + self.N, b[1] + self.N) for b in molecule.bonds]
         self.N += molecule.num_beads
+
+    def brew(self, name: str = "input.gsd"):
+        bonds = np.array(self.bonds)
+        coords = np.array(self.coords)
+
+        snapshot = gsd.hoomd.Frame()
+        snapshot.particles.N = self.N
+        snapshot.configuration.box = [self.box.x, self.box.y, self.box.z, 0, 0, 0]
+        snapshot.bonds.N = len(self.bonds)
+
+        snapshot.particles.types = sorted(list(set(self.types)))
+        b_types = set()
+        for b in self.bonds:
+
+            if self.types[b[0]] < self.types[b[1]]:
+                b_types.add(self.types[b[0]] + self.types[b[1]])
+            else:
+                b_types.add(self.types[b[1]] + self.types[b[0]])
+
+        snapshot.bonds.types = sorted(list(b_types))
+
+        snapshot.particles.typeid = np.array(
+            [snapshot.particles.types.index(t) for t in self.types]
+        )
+        snapshot.particles.position = coords
+        snapshot.particles.mass = np.array([1.0] * self.N)
+        snapshot.bonds.group = bonds
+        tmp_type: str = ""
+        b_type_id = list()
+        for b in self.bonds:
+            if self.types[b[0]] < self.types[b[1]]:
+                tmp_type = self.types[b[0]] + self.types[b[1]]
+            else:
+                tmp_type = self.types[b[1]] + self.types[b[0]]
+            b_type_id.append(snapshot.bonds.types.index(tmp_type))
+        snapshot.bonds.typeid = np.array(b_type_id)
+
+        with gsd.hoomd.open(name=name, mode="w") as f:
+            f.append(snapshot)

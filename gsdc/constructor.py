@@ -30,6 +30,19 @@ def rnd_vector(length: float = BOND_LENGTH) -> np.ndarray:
     return v
 
 
+def repulsive_force(bond_length: float, x: float) -> float:
+    """_summary_
+
+    Args:
+        bond_length (float): lengths of bond
+        x (float): coordinate
+
+    Returns:
+        float: linear repulsive force
+    """
+    return (bond_length / x - 1.0) * 0.5
+
+
 class MolGraph:
     """
     Creation, building and processing of a molecular graph
@@ -157,7 +170,7 @@ class MolGraph:
             ## random graph generation (only without periodic conditions)
             r_max: float = bond_length * 2
             r_min: float = 0.0
-            force = lambda x: (bond_length / x - 1.0) * 0.5
+            force = repulsive_force(bond_length, x)
             fx = np.zeros(self.num_beads)
             fy = np.zeros(self.num_beads)
             fz = np.zeros(self.num_beads)
