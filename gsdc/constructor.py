@@ -170,7 +170,6 @@ class MolGraph:
             ## random graph generation (only without periodic conditions)
             r_max: float = bond_length * 2
             r_min: float = 0.0
-            force = repulsive_force(bond_length, x)
             fx = np.zeros(self.num_beads)
             fy = np.zeros(self.num_beads)
             fz = np.zeros(self.num_beads)
@@ -193,7 +192,7 @@ class MolGraph:
                         r_max = r
                     if r < r_min:
                         r_min = r
-                    f = force(r)
+                    f = repulsive_force(bond_length, r)
                     fx[b[0]] += f * dx
                     fx[b[1]] -= f * dx
                     fy[b[0]] += f * dy

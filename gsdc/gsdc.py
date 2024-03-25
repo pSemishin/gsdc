@@ -27,6 +27,15 @@ class Pot:
         self.bonds += [(b[0] + self.N, b[1] + self.N) for b in molecule.bonds]
         self.N += molecule.num_beads
 
+    def add_bead(self, bead_name: str):
+        x = (0.5 - np.random.random()) * self.box.x
+        y = (0.5 - np.random.random()) * self.box.y
+        z = (0.5 - np.random.random()) * self.box.z
+        coord = np.array([x, y, z])
+        self.coords = np.vstack([self.coords, coord])
+        self.types += [bead_name]
+        self.N += 1
+
     def brew(self, name: str = "input.gsd"):
         bonds = np.array(self.bonds)
         coords = np.array(self.coords)
