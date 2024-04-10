@@ -14,6 +14,7 @@ class Pot:
         self.coords = np.array(list())
         self.types: List = list()
         self.bonds: List = list()
+        self.rho = 3
         self.N = 0
 
     def add(self, molecule: Mol):
@@ -32,10 +33,29 @@ class Pot:
         y = (0.5 - np.random.random()) * self.box.y
         z = (0.5 - np.random.random()) * self.box.z
         coord = np.array([x, y, z])
-        self.coords = np.vstack([self.coords, coord])
+        if len(self.coords) > 1:
+            self.coords = np.vstack([self.coords, coord])
+        else: 
+            self.coords = coord
         self.types += [bead_name]
         self.N += 1
-
+        
+    def fuller(self, bead_name: str):
+        num_solvent = int(self.box.volume * self.rho) - self.N
+        if num_solvent < 1:
+            raise ValueError('Pot: fuller: num_solvent < 1')
+        x = (0.5 - np.random.random(num_solvent)) * self.box.x
+        y = (0.5 - np.random.random(num_solvent)) * self.box.y
+        z = (0.5 - np.random.random(num_solvent)) * self.box.z
+        coord = np.vstack([x, y, z]).T
+        if len(self.coords) > 1:
+            self.coords = np.vstack([self.coords, coord])
+        else: 
+            self.coords = coord
+        self.types += [bead_name] * num_solvent
+        self.N += num_solvent
+        
+        
     def brew(self, name: str = "input.gsd"):
         bonds = np.array(self.bonds)
         coords = np.array(self.coords)
