@@ -35,26 +35,27 @@ class Pot:
         coord = np.array([x, y, z])
         if len(self.coords) > 1:
             self.coords = np.vstack([self.coords, coord])
-        else:
+        else: 
             self.coords = coord
         self.types += [bead_name]
         self.N += 1
-
+        
     def fuller(self, bead_name: str):
         num_solvent = int(self.box.volume * self.rho) - self.N
         if num_solvent < 1:
-            raise ValueError("Pot: fuller: num_solvent < 1")
+            raise ValueError('Pot: fuller: num_solvent < 1')
         x = (0.5 - np.random.random(num_solvent)) * self.box.x
         y = (0.5 - np.random.random(num_solvent)) * self.box.y
         z = (0.5 - np.random.random(num_solvent)) * self.box.z
         coord = np.vstack([x, y, z]).T
         if len(self.coords) > 1:
             self.coords = np.vstack([self.coords, coord])
-        else:
+        else: 
             self.coords = coord
         self.types += [bead_name] * num_solvent
         self.N += num_solvent
-
+        
+        
     def brew(self, name: str = "input.gsd"):
         bonds = np.array(self.bonds)
         coords = np.array(self.coords)
@@ -94,30 +95,27 @@ class Pot:
         with gsd.hoomd.open(name=name, mode="w") as f:
             f.append(snapshot)
 
-    def dl_meso_config(self, name: str = "CONFIG", solvent: str = "W"):
+
+    def dl_meso_config(self, name: str = 'CONFIG', solvent: str = "W"):
         coords = np.array(self.coords)
         N = self.N
         box = [self.box.x, self.box.y, self.box.z]
         types = self.types
         num = 1
 
-        with open(file=name, mode="w+") as f:
-            f.write("DL_MESO molecule cyclic example\n")
-            f.write(f"       0       1{N:10.0f}\n")
-            f.write(f"{box[0]:16.10f}{0.0:16.10f}{0.0:16.10f}\n")
-            f.write(f"{0.0:16.10f}{box[1]:16.10f}{0.0:16.10f}\n")
-            f.write(f"{0.0:16.10f}{0.0:16.10f}{box[2]:16.10f} \n")
+        with open(file = name, mode = "w+") as f:
+            f.write('DL_MESO molecule cyclic example\n')
+            f.write(f'       0       1{N:10.0f}\n')
+            f.write(f'{box[0]:16.10f}{0.0:16.10f}{0.0:16.10f}\n')
+            f.write(f'{0.0:16.10f}{box[1]:16.10f}{0.0:16.10f}\n')
+            f.write(f'{0.0:16.10f}{0.0:16.10f}{box[2]:16.10f} \n')
             for i, t in enumerate(types):
                 if t == solvent:
-                    f.write(f"{solvent}   {num :7.0f}\n")
+                    f.write(f'{solvent}   {num :7.0f}\n')
                     num += 1
-                    f.write(
-                        f"{coords[i][0] :16.10f}{coords[i][1] :16.10f}{coords[i][2] :16.10f}\n"
-                    )
+                    f.write(f'{coords[i][0] :16.10f}{coords[i][1] :16.10f}{coords[i][2] :16.10f}\n')
             for i, t in enumerate(types):
                 if t != solvent:
-                    f.write(f"{t}   {num :7.0f}\n")
+                    f.write(f'{t}   {num :7.0f}\n')
                     num += 1
-                    f.write(
-                        f"{coords[i][0] :16.10f}{coords[i][1] :16.10f}{coords[i][2] :16.10f}\n"
-                    )
+                    f.write(f'{coords[i][0] :16.10f}{coords[i][1] :16.10f}{coords[i][2] :16.10f}\n')
