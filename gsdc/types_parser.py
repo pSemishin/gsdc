@@ -1,7 +1,5 @@
 from typing import List
 
-import sympy
-
 
 def types_parser(script: str) -> List[str]:
     """_summary_
@@ -72,7 +70,7 @@ def types_parser(script: str) -> List[str]:
         else:
             exprssion += s
 
-    return sympy.sympify(exprssion)
+    return eval(exprssion)
 
 
 if __name__ == "__main__":
