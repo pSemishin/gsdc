@@ -13,5 +13,4 @@ if __name__ == "__main__":
     pot.fuller(solvent)
     pot.brew()
     pot.dl_meso_config()
-    print(pot.types)
-    print(pot.coords)
+    pot.dl_meso_field()

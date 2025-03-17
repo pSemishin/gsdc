@@ -14,6 +14,7 @@ class Pot:
         self.coords = np.array(list())
         self.types: List = list()
         self.bonds: List = list()
+        self.molecules: int = 0
         self.rho = 3
         self.N = 0
 
@@ -27,6 +28,7 @@ class Pot:
         self.types += molecule.types
         self.bonds += [(b[0] + self.N, b[1] + self.N) for b in molecule.bonds]
         self.N += molecule.num_beads
+        self.molecules += 1
 
     def add_bead(self, bead_name: str):
         x = (0.5 - np.random.random()) * self.box.x
@@ -96,15 +98,15 @@ class Pot:
             f.append(snapshot)
 
 
-    def dl_meso_config(self, name: str = 'CONFIG', solvent: str = "W"):
+    def dl_meso_config(self, name: str = 'molecule cyclic example', solvent: str = "W"):
         coords = np.array(self.coords)
         N = self.N
         box = [self.box.x, self.box.y, self.box.z]
         types = self.types
         num = 1
 
-        with open(file = name, mode = "w+") as f:
-            f.write('DL_MESO molecule cyclic example\n')
+        with open(file = 'CONFIG', mode = "w+") as f:
+            f.write(f'DL_MESO {name}\n')
             f.write(f'       0       1{N:10.0f}\n')
             f.write(f'{box[0]:16.10f}{0.0:16.10f}{0.0:16.10f}\n')
             f.write(f'{0.0:16.10f}{box[1]:16.10f}{0.0:16.10f}\n')
@@ -119,3 +121,44 @@ class Pot:
                     f.write(f'{t}   {num :7.0f}\n')
                     num += 1
                     f.write(f'{coords[i][0] :16.10f}{coords[i][1] :16.10f}{coords[i][2] :16.10f}\n')
+
+
+    def dl_meso_field(self, name: str = 'molecule cyclic example'):
+        bonds = self.bonds
+        N = self.N
+        types = self.types
+        mol = self.molecules
+        num_beads = 1
+        pairs = list()
+
+        with open(file = 'FIELD', mode = "w+") as f:
+            f.write(f'DL_MESO {name}\n')
+            f.write(f'\n')
+            f.write(f'SPECIES {len(set(types))}\n')
+            for t in set(types):
+                num_type = 0
+                for x in types:
+                    if x == t:
+                        num_type += 1
+                f.write(f'{t}        1.0 0.0 {num_type}\n')
+            f.write(f'\n')
+            f.write(f'MOLECULES 1\n')
+            f.write(f'\n')
+            f.write(f'nummols {mol}\n')
+            for t in types:
+                if t != 'W':
+                    num_beads += 1
+            f.write(f'beads {num_beads}\n')
+            f.write(f'bonds {len(bonds)}\n')
+            for b in bonds:
+                f.write(f'harm  {b} 128.000 0.500000\n')
+            f.write(f'finish\n')
+            f.write(f'\n')
+            f.write(f'INTERACTIONS 6\n')
+            for i, t in enumerate(set(types)):
+                pairs += [(t, x) for x in list(set(types))[i:]]
+            for pair in pairs:
+                f.write(f'{pair[0]} {pair[1]} dpd {25.0:4f} {1.0:3f} {4.5:3f}\n')
+            f.write(f'\n')
+            f.write(f'close\n')
+            print(pairs)
